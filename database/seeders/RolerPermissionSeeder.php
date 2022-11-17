@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Module;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -16,49 +17,76 @@ class RolerPermissionSeeder extends Seeder
      */
     public function run()
     {
-        //
-        // create roles
+
         $roleSuperAdmin = Role::create(['name' => 'superadmin']);
         $roleAdmin = Role::create(['name' => 'admin']);
         $roleEditor = Role::create(['name' => 'editor']);
         $roleUser = Role::create(['name' => 'user']);
 
+
+        $adminModule = Module::create(['name' => 'admin']);
+        $dashboardModule = Module::create(['name' => 'dashboard']);
+        $blogModule = Module::create(['name' => 'blog']);
+        $profileModule = Module::create(['name' => 'blog']);
+        $roleModule = Module::create(['name' => 'role']);
+
         // Permission List as array
         $permissions = [
 
-            // Dashboard
-            'dashboard.view',
+          
+            [
+                'module_id' => $dashboardModule->id,
+                'permissions' => ['dasboard.view']
+            ],
+            [
+                'module_id' => $blogModule->id,
+                'permissions' => [
+                    'blog.create',
+                    'blog.view',
+                    'blog.edit',
+                    'blog.delete',
+                    'blog.approve',
+                ]
+            ],
+            [
+                'module_id' => $adminModule->id,
+                'permissions' => [
+                    'admin.create',
+                    'admin.view',
+                    'admin.edit',
+                    'admin.delete',
+                    'admin.approve',
+                ]
+            ],
+            [
+                'module_id' => $roleModule->id,
+                'permissions' => [
+                    'role.create',
+                    'role.view',
+                    'role.edit',
+                    'role.delete',
+                    'role.approve',
+                ]
+            ],
+            [
+                'module_id' => $profileModule->id,
+                'permissions' => [
+                    'profile.view',
+                    'profile.edit'
+                ]
+            ],
 
-            // Blog Permissions
-            'blog.create',
-            'blog.view',
-            'blog.edit',
-            'blog.delete',
-            'blog.approve',
 
-            // Admin Permissions
-            'admin.create',
-            'admin.view',
-            'admin.edit',
-            'admin.delete',
-            'admin.approve',
-
-            // Role Permissions
-            'role.create',
-            'role.view',
-            'role.edit',
-            'role.delete',
-            'role.approve',
-
-            // Profile Permissions
-            'profile.view',
-            'profile.edit'
         ];
 
         foreach ($permissions as $permission) {
-            $createdPermission = Permission::create(['name' => $permission]);
-            $roleSuperAdmin->givePermissionTo($createdPermission);
-            $createdPermission->assignRole($roleSuperAdmin);
+
+            foreach ($permission['permissions'] as  $val) {
+                $createdPermission = Permission::create(['name' => $val,'module_id' => $permission['module_id']]);
+                $roleSuperAdmin->givePermissionTo($createdPermission);
+                $createdPermission->assignRole($roleSuperAdmin);
+            }
+
 
         }
 

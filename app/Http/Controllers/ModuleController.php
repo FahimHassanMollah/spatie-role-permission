@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Module;
+use App\Models\Permission;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-class RoleController extends Controller
+class ModuleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +15,10 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-        return view('backend.pages.roles.index',['roles' => $roles]);
+        // $module = Module::with('permissions')->get();
+        // dd($module);
+        $permission = Permission::with('module')->get();
+        dd($permission);
     }
 
     /**
@@ -28,8 +28,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $modules = Module::all();
-        return view('backend.pages.roles.create',['modules' => $modules]);
+        //
     }
 
     /**
@@ -41,26 +40,15 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
-        // dd($request->permissions);
-        $request->validate([
-            'name' => 'required | unique:roles,name'
-        ]);
-
-       $role = Role::create(['name' => $request->name]);
-       if ($request->permissions) {
-        $role->syncPermissions($request->permissions);
-       }
-       return back();
-
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Module $module)
     {
         //
     }
@@ -68,10 +56,10 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Module $module)
     {
         //
     }
@@ -80,10 +68,10 @@ class RoleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Module $module)
     {
         //
     }
@@ -91,10 +79,10 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Module $module)
     {
         //
     }
