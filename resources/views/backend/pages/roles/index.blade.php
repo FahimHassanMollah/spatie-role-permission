@@ -57,7 +57,7 @@ Role Page - Admin Panel
                                     <td>{{ $loop->index+1 }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
-                                        -
+                                        <a href="{{ route('admin.roles.edit',['role'=>$role->id]) }}">Edit</a>
                                     </td>
                                 </tr>
                                @endforeach
@@ -68,7 +68,7 @@ Role Page - Admin Panel
             </div>
         </div>
         <!-- data table end -->
-        
+
     </div>
 </div>
 @endsection
@@ -81,7 +81,7 @@ Role Page - Admin Panel
      <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
      <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
      <script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
-     
+
      <script>
          /*================================
         datatable active

@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Module;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
+use App\Models\Permission;
 class RoleController extends Controller
 {
     /**
@@ -28,6 +27,9 @@ class RoleController extends Controller
      */
     public function create()
     {
+        // $data = Permission::with('module')->get()->groupBy('module_id');
+        // dd($data);
+
         $modules = Module::all();
         return view('backend.pages.roles.create',['modules' => $modules]);
     }
@@ -71,9 +73,11 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        //
+
+        $modules = Module::all();
+        return view('backend.pages.roles.edit',['modules' => $modules,'role' => $role]);
     }
 
     /**
@@ -83,9 +87,15 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:roles,name,'.$role->id,
+        ]);
+        if ($request->permissions) {
+         $role->syncPermissions($request->permissions);
+        }
+        return back();
     }
 
     /**
